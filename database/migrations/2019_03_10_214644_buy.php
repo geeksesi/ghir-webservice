@@ -13,14 +13,14 @@ class Buy extends Migration
      */
     public function up()
     {
-        Schema::create('sell', function (Blueprint $table) {
+        Schema::create('buy', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->integer('seller_id')->unsigned();
-            $table->integer('buyer_id')->unsigned();
-            $table->integer('product_id')->unsigned();
+            $table->unsignedInteger('seller_id');
+            $table->unsignedInteger('buyer_id');
+            $table->unsignedInteger('product_id');
             $table->unsignedBigInteger('value');
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('time');
@@ -35,6 +35,6 @@ class Buy extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('buy');
     }
 }

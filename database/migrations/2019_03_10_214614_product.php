@@ -13,13 +13,13 @@ class Product extends Migration
      */
     public function up()
     {
-        Schema::create('sell', function (Blueprint $table) {
+        Schema::create('product', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->char('name',100);
-            $table->integer('price_id')->unsigned();
+            $table->string('name',150);
+            $table->unsignedInteger('price_id');
         });
     }
 
@@ -30,6 +30,6 @@ class Product extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('product');
     }
 }

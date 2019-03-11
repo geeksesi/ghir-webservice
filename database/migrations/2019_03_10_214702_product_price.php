@@ -18,7 +18,7 @@ class ProductPrice extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->integer('product_id')->unsigned();
+            $table->unsignedInteger('product_id');
             $table->unsignedBigInteger('min_price');
             $table->unsignedBigInteger('max_price');
             $table->unsignedBigInteger('price');
@@ -33,6 +33,6 @@ class ProductPrice extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('product_price');
     }
 }

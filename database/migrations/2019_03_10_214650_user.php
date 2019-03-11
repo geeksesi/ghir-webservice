@@ -13,7 +13,7 @@ class User extends Migration
      */
     public function up()
     {
-                Schema::create('sell', function (Blueprint $table) {
+        Schema::create('user', function (Blueprint $table) {
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
             
@@ -31,6 +31,6 @@ class User extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('user');
     }
 }
