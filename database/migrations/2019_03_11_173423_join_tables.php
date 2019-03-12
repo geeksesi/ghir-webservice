@@ -24,7 +24,7 @@ class JoinTables extends Migration
         Schema::table('sell', function (Blueprint $table) {
             // join
             $table->foreign('seller_id')->references('id')->on('user');
-            // $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('product_id')->references('id')->on('product');
         });
 
         Schema::table('product', function (Blueprint $table) {
