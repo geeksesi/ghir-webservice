@@ -19,6 +19,7 @@ class JoinTables extends Migration
             $table->foreign('product_id')->references('id')->on('product');
             $table->foreign('seller_id')->references('id')->on('user');
             $table->foreign('buyer_id')->references('id')->on('user');
+            $table->foreign('sell_id')->references('id')->on('sell');
         });
 
         Schema::table('sell', function (Blueprint $table) {
@@ -34,7 +35,8 @@ class JoinTables extends Migration
 
         Schema::table('product_price', function (Blueprint $table) {
             // join
-            $table->foreign('product_id')->references('id')->on('product');
+            // comment because we can't add a row without a non product_id exist and can't add product without non price_id exist ... IDK what happend :D
+            // $table->foreign('product_id')->references('id')->on('product');
         });
     }
 

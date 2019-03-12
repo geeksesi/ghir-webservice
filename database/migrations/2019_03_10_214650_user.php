@@ -19,8 +19,8 @@ class User extends Migration
             
             $table->increments('id');
             $table->string('name', 150);
-            $table->string('email', 300);
-            $table->string('phone', 14);
+            $table->string('email', 300)->unique();
+            $table->string('phone', 14)->unique();
         });
     }
 

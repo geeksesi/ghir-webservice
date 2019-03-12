@@ -21,6 +21,7 @@ class Buy extends Migration
             $table->unsignedInteger('seller_id');
             $table->unsignedInteger('buyer_id');
             $table->unsignedInteger('product_id');
+            $table->unsignedInteger('sell_id');
             $table->unsignedBigInteger('value');
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('time');
