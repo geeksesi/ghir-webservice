@@ -14,3 +14,5 @@
 $router->get('/', function () use ($router) {
     return "hello world";
 });
+
+$router->get('/get/sell', 'Get@sell');
