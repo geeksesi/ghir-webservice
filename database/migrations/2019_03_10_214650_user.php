@@ -18,9 +18,9 @@ class User extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->string('name', 150);
-            $table->string('email', 300)->unique();
-            $table->string('phone', 14)->unique();
+            $table->string('user_name', 150);
+            $table->string('user_email', 300)->unique();
+            $table->string('user_phone', 14)->unique();
         });
     }
 

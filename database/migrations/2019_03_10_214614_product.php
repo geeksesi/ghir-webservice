@@ -18,7 +18,7 @@ class Product extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->string('name',150);
+            $table->string('product_name',150);
             $table->unsignedInteger('price_id');
         });
     }
