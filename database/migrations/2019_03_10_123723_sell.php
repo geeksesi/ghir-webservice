@@ -24,7 +24,7 @@ class Sell extends Migration
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('time');
             $table->char('status', 10);
-            $table->unsignedInteger('status_array')->nullable();
+            $table->unsignedInteger('new_id')->nullable();
         });
     }
 

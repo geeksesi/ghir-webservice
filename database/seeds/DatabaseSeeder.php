@@ -12,15 +12,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         app('db')->table('user')->insert([
-            'name'  => "geeksesi",
-            'email' => 'geeksesi@gmail.com',
-            'phone' => '09100101543',
+            'user_name'  => "geeksesi",
+            'user_email' => 'geeksesi@gmail.com',
+            'user_phone' => '09100101543',
         ]);
 
         app('db')->table('user')->insert([
-            'name'  => "javad",
-            'email' => 'javad@gmail.com',
-            'phone' => '09224501913',
+            'user_name'  => "javad",
+            'user_email' => 'javad@gmail.com',
+            'user_phone' => '09224501913',
         ]);
 
         app('db')->table('product_price')->insert([        
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         ]);
         
         app('db')->table('product')->insert([        
-            'name'     => "قیر فرداعلاء",
+            'product_name'     => "قیر فرداعلاء",
             'price_id' => 1,
         ]);
         
