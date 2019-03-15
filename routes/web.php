@@ -18,14 +18,14 @@ $router->get('/get/buy', 'Get@buy');
 $router->get('/get/user', 'Get@user');
 $router->get('/get/product', 'Get@product');
 
-$router->get('/set/sell', 'Set@sell');
-$router->get('/set/buy', 'Set@buy');
-$router->get('/set/user', 'Set@user');
-$router->get('/set/product', 'Set@product');
-$router->get('/set/product_price', 'Set@product_price');
+$router->post('/set/sell', 'Set@sell');
+$router->post('/set/buy', 'Set@buy');
+$router->post('/set/user', 'Set@user');
+$router->post('/set/product', 'Set@product');
+$router->post('/set/product_price', 'Set@product_price');
 
-$router->get('/update/sell', 'Update@sell');
-$router->get('/update/buy', 'Update@buy');
-$router->get('/update/user', 'Update@user');
-$router->get('/update/product', 'Update@product');
-$router->get('/update/product_price', 'Update@product_price');
+$router->post('/update/sell', 'Update@sell');
+$router->post('/update/buy', 'Update@buy');
+$router->post('/update/user', 'Update@user');
+$router->post('/update/product', 'Update@product');
+$router->post('/update/product_price', 'Update@product_price');
