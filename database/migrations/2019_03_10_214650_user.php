@@ -21,6 +21,7 @@ class User extends Migration
             $table->string('user_name', 150);
             $table->string('user_email', 300);
             $table->string('user_phone', 14);
+            $table->unsignedBigInteger('user_timestamp');
         });
     }
 

@@ -22,7 +22,8 @@ class ProductPrice extends Migration
             $table->unsignedBigInteger('min_price');
             $table->unsignedBigInteger('max_price');
             $table->unsignedBigInteger('price');
-            $table->unsignedBigInteger('time');
+            $table->unsignedBigInteger('price_timestamp');
+            $table->char('price_status', 10);
         });
    }
 

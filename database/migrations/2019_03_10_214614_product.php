@@ -19,7 +19,6 @@ class Product extends Migration
             
             $table->increments('id');
             $table->string('product_name',150);
-            $table->unsignedInteger('price_id');
         });
     }
 

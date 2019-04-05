@@ -18,13 +18,15 @@ class Sell extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->unsignedInteger('seller_id');
+            $table->unsignedInteger('user_id');
             $table->unsignedInteger('product_id');
-            $table->unsignedBigInteger('value');
-            $table->unsignedBigInteger('price');
-            $table->unsignedBigInteger('time');
-            $table->char('status', 10);
-            $table->unsignedInteger('new_id')->nullable();
+            $table->unsignedBigInteger('offer_value');
+            $table->unsignedBigInteger('offer_price');
+            $table->unsignedBigInteger('offer_timestamp');
+            $table->char('offer_status', 10);
+            $table->unsignedInteger('transaction_id')->nullable();
+            $table->unsignedInteger('previous_offer')->nullable();
+            $table->unsignedInteger('next_offer')->nullable();
         });
     }
 
