@@ -42,6 +42,11 @@ class JoinTables extends Migration
             $table->foreign('seller_id')->references('id')->on('user');
             $table->foreign('buyer_id')->references('id')->on('user');
         });
+
+        Schema::table('inventory', function (Blueprint $table) {
+            // join
+            $table->foreign('user_id')->references('id')->on('user');
+        });
     }
 
     /**

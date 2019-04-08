@@ -101,6 +101,16 @@ class DatabaseSeeder extends Seeder
             'transaction_id' => 2,
             'offer_status'    => "complete",
         ]);
+    
+    
+        app('db')->table('inventory')->insert([        
+            'user_id'         => 1,
+            'inventory_change'         => 5,
+            'inventory_change_type'         => 2,
+            'inventory_current'         => 5,
+            'inventory_timestamp' => time(),
+            'inventory_status'    => "complete",
+        ]);
 
     }
 }
