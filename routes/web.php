@@ -10,22 +10,32 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+// Home
+$router->get('/', 'Home@home');
 
-$router->get('/', 'Home');
+// Get
+$router->get('/get/sell', 'Sell@get');
+$router->get('/get/buy', 'Buy@get');
+$router->get('/get/user', 'User@get');
+$router->get('/get/user/inventory', 'User@inventory_get');
+$router->get('/get/product', 'Product@get');
+$router->get('/get/product/price', 'Product@price_get');
+$router->get('/get/transaction', 'Transaction@get');
 
-$router->get('/get/sell', 'Get@sell');
-$router->get('/get/buy', 'Get@buy');
-$router->get('/get/user', 'Get@user');
-$router->get('/get/product', 'Get@product');
+// Set
+$router->get('/set/sell', 'Sell@set');
+$router->get('/set/buy', 'Buy@set');
+$router->get('/set/user', 'User@set');
+$router->get('/set/user/inventory', 'User@inventory_set');
+$router->get('/set/product', 'Product@set');
+$router->get('/set/product/price', 'Product@price_set');
+$router->get('/set/transaction', 'Transaction@set');
 
-$router->post('/set/sell', 'Set@sell');
-$router->post('/set/buy', 'Set@buy');
-$router->post('/set/user', 'Set@user');
-$router->post('/set/product', 'Set@product');
-$router->post('/set/product_price', 'Set@product_price');
-
-$router->post('/update/sell', 'Update@sell');
-$router->post('/update/buy', 'Update@buy');
-$router->post('/update/user', 'Update@user');
-$router->post('/update/product', 'Update@product');
-$router->post('/update/product_price', 'Update@product_price');
+// Update
+$router->get('/update/sell', 'Sell@update');
+$router->get('/update/buy', 'Buy@update');
+$router->get('/update/user', 'User@update');
+$router->get('/update/user/inventory', 'User@inventory_update');
+$router->get('/update/product', 'Product@update');
+$router->get('/update/product/price', 'Product@price_update');
+$router->get('/update/transaction', 'Transaction@update');
