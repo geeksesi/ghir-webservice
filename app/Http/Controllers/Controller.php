@@ -16,8 +16,6 @@ class Controller extends BaseController
          * 4- edited
          * 5- rejected
          * 6- complete
-         *
-         * @return  [type]  [return description]
          */
         $status_type = ["open", "closed", "removed", "edited", "rejected", "complete"];
         if (!in_array($status, $status_type))
