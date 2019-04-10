@@ -54,3 +54,12 @@ p,h1,h2,h4,h5,h6{direction:rtl; text-align:right}
 ## more information
 - router file : `/routes/web/php`
 - [laravel/lumeon Document about routing](https://lumen.laravel.com/docs/5.8/routing)
+
+<dl>
+
+## نکته
+این فایل فقط حاوی مسیر های اصلی می‌باشد.
+
+در مستندات هر فایل یک سری مسیر‌های فرعی نیز موجود می باشند که کد آنها در فایل روتر قرار دارد.
+
+</dl>
