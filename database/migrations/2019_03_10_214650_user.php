@@ -18,9 +18,13 @@ class User extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->string('user_name', 150);
-            $table->string('user_email', 300);
-            $table->string('user_phone', 14);
+            $table->string('name', 40);
+            $table->string('user_name', 40);
+            $table->text('password');
+            $table->string('phone_number', 14);
+            $table->string('user_status', 40);
+            $table->unsignedInteger('account_id');
+            $table->float('user_credit', 10, 4);
             $table->unsignedBigInteger('user_timestamp');
         });
     }
