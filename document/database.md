@@ -1,70 +1,52 @@
 <style>
-p,li,ul.h1,h2,h4,h5,h6{direction:rtl; text-align:right}
+dl{direction:rtl; text-align:right}
+dt{direction:ltr; text-align:left}
 </style>
 <center>به نام خداوند جان و خرد</center>
 
+<dl>
+
 # ساختار دیتابیس
 
-  - جدول فروش (sell)
-  - جدول خرید (buy)
-  - جدول کاربران (users)
-  - محصولات (product)
-  - قیمت محصولات  (product_price)
-  - تراکنش ها (transaction)
-  - موجودی کاربر ( inventory )
+</dl>
 
-|      sell       |       buy       |      user      |   product    |  product_price  |      transaction      |       inventory       |
-| :-------------: | :-------------: | :------------: | :----------: | :-------------: | :-------------------: | :-------------------: |
-|       id        |       id        |       id       |      id      |       id        |          id           |          id           |
-|     user_id     |     user_id     |   user_name    | product_name |   product_id    |      product_id       |        user_id        |
-|   product_id    |   product_id    |   user_email   |              |    min_price    |       offer_id        |   inventory_change    |
-|   offer_value   |   offer_value   |   user_phone   |              |    max_price    |      offer_type       | inventory_change_type |
-|   offer_price   |   offer_price   | user_timestamp |              |      price      |   transaction_value   |   inventory_current   |
-| offer_timestamp | offer_timestamp |                |              | price_timestamp |   transaction_price   | inventory_timestamp  |
-|  offer_status   |  offer_status   |                |              |                 |  transaction_status   | inventory_status|
-| transaction_id  | transaction_id  |                |              |  price_status   | transaction_timestamp |
-| previous_offer  | previous_offer  |                |              |                 |       seller_id       |
-|   next_offer    |   next_offer    |                |              |                 |       buyer_id        |
+|   sell_order    |    buy_order    |        position        |     user     | account  |
+| :-------------: | :-------------: | :--------------------: | :----------: | :------: |
+|       id        |       id        |           id           |      id      |    id    |
+|   order_price   |   order_price   |     position_gain      | user_status  |   bank   |
+| order_quantity  | order_quantity  |     position_type      |     name     |  sheba   |
+|     user_id     |     user_id     |     position_price     |  user_name   | owner_id |
+| order_timestamp | order_timestamp |   position_quantity    |   password   |          |
+|                 |                 |        user_id         | phone_number |          |
+|                 |                 |   position_timestamp   |  account_id  |          |
+|                 |                 | position_old_timestamp | user_credit  |          |
+|                 |                 |        corr_id         |              |          |
+
+<dl>
+
+# ساختار ذخیره داده
+
+</dl>
+
+|    sell_order    |    buy_order     |     position     |     user     |     account      |
+| :--------------: | :--------------: | :--------------: | :----------: | :--------------: |
+|   unsigned_int   |   unsigned_int   |   unsigned_int   | unsigned_int |   unsigned_int   |
+| unsigned_big_int | unsigned_big_int |   float(10, 4)   | varchar(40)  |   varchar(30)    |
+| unsigned_big_int | unsigned_big_int |    varchar(5)    | varchar(40)  |   varchar(30)    |
+|   unsigned_int   |   unsigned_int   | unsigned_big_int | varchar(40)  | unsigned_int(20) |
+| unsigned_big_int | unsigned_big_int | unsigned_big_int |     text     |                  |
+|                  |                  |  unsigned__int   | varchar(14)  |                  |
+|                  |                  | unsigned_big_int | unsigned_int |                  |
+|                  |                  | unsigned_big_int | float(10, 4) |                  |
+|                  |                  |   unsigned_int   |              |                  |
+
 
 ---
 
-### offer_status
+### position_type :
+- buy
+- sell
 
-- open
-- closed
-- removed
-- complete
-- edited
-- rejected
-- waiting
-- unfinished
-
-### price_status
-- edited
-- expire
-- available
-
-### transaction_status
-- complete
-- awaiting_payment
-- illega
-- canceled
-- rejected
-
-### inventory_status
-- accepted
-- illega
-- canceled
-- rejected
-
-### inventory_change_type
-- 1 = decrease
-- 2 = increase
-
-
-### offer_id
-- 1 = sell
-- 2 = buy
 ### Date type :
 **unix_time**
 

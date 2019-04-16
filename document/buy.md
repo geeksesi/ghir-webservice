@@ -14,11 +14,9 @@ dt{direction:ltr; text-align:left}
 <dl>
 
 - 1 -  دریافت انواع پیشنهاد های جدول فروش
-- 2 - دریافت براساس آی‌دی
+- 2 - دریافت یک پیشنهاد براساس آی‌دی
 - 3 - دریافت پیشنهادات براساس کاربر
-- 4 - دریافت پیشنهادات براساس شماره محصول
 - 5 - دریافت پیشنهادات براساس زمان 
-- 6 - دریافت تاریخچه یک پیشنهاد
 
 
 ### نکات :
@@ -29,22 +27,13 @@ dt{direction:ltr; text-align:left}
 1 - [by status](#3)  : function = `status`  in buy file
 
 </dt>
+
+- هریک از توابع متانسب با اسمشان یک تابع در همین فایل برای دریافت اطلاعات از دیتابیس دارند که اگر نیاز به توضیحاتی در مورد تابع باشد به صورت کامنت درون کد و یا در بخش مربوط قرار می‌گیرد
 </dl>
 
 ---
 
 ### 1 
-by status
-- Query Address : `/get/buy/status`
-
-- Query Body : `Get`  
-```
-    {
-        status*
-    }
-```
-
-### 2 
 by id
 - Query Address : `/get/buy/id/`
 
@@ -70,24 +59,10 @@ by user_id
     }
 ```
 
-### 4 
-by product_id
-- Query Address : `/get/buy/product/`
-
-- Query Body : `Get`
-```  
-    {
-        product_id*
-        user_id
-        status
-        start_time
-        end_time
-    }
-```
 
 ### 5 
 by TimeStamp
-- Query Address : `/get/buy/TimeStamp/`
+- Query Address : `/get/buy/timestamp/`
 
 - Query Body : `Get`
 ```  
@@ -100,18 +75,9 @@ by TimeStamp
     }
 ```
 
-### 6 
-History 
-- Query Address : `/get/buy/History/`
 
-- Query Body : `Get`
-```  
-    {
-        id*
-        start_time
-        end_time
-    }
-```
+#### start_time and end_time
+  - unix_time like : ` 1554081890 `
 
 
 ---
@@ -124,15 +90,14 @@ History
 
 </dl>
 
-- Query Address : `set/buy`
+- Query Address: `set/buy`
 
-- Query Body : `Post`
+- Query Body: `Post`
 ```
 {
     user_id*
-    product_id*
-    offer_value*
-    offer_price*
+    quantity*
+    price*
     hash*
 }
 ```
@@ -146,32 +111,31 @@ History
 
 </dl>
 
-- hash method : `AES-256-CBC`
-- hash key : 
+- hash method: `AES-256-CBC`
+- hash key   : 
   
-  made with :\
+  made with: \
   ```openssl_random_pseudo_bytes(16, true);```
-- hash IV :
+- hash IV: 
 
-    made with :\
+    made with: \
     ```openssl_random_pseudo_bytes(16, true);```
 
 - sample with php :
   ```
     $array = [
-      'user_id'=>1,
-      'product_id'=>2,
-      'offer_value'=>550,
-      'offer_price'=>1.5
+      'user_id'  => 1,
+      'quantity' => 550,
+      'price'    => 1.5
     ];
     $enc_name = openssl_encrypt(
-    json_encode($array), // padded data
+    json_encode($array),   // padded data
     'AES-256-CBC',        // cipher and mode
     $encryption_key,      // secret key
     0,                    // options (not used)
     $iv                   // initialisation vector
     );
-    ```
+  ```
   TIP : hold Key and IV in a define variable be secret :)\
   TIP : array must convert to json...
 ----
