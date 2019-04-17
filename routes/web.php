@@ -14,8 +14,16 @@
 $router->get('/', 'Home@home');
 
 // Get
+// Buy
+$router->get('/get/buy',                'Buy@get');
+$router->get('/get/buy/status',       'Buy@status');
+$router->get('/get/buy/id',           'Buy@id');
+$router->get('/get/buy/user',      'Buy@user');
+$router->get('/get/buy/product',   'Buy@product');
+$router->get('/get/buy/timestamp',      'Buy@timestamp');
+$router->get('/get/buy/history',        'Buy@TimeStamp');
+// Sell
 $router->get('/get/sell', 'Sell@get');
-$router->get('/get/buy', 'Buy@get');
 $router->get('/get/user', 'User@get');
 $router->get('/get/user/inventory', 'User@inventory_get');
 $router->get('/get/product', 'Product@get');
