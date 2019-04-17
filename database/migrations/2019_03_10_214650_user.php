@@ -25,7 +25,6 @@ class User extends Migration
             $table->string('user_status', 40);
             $table->unsignedInteger('account_id');
             $table->float('user_credit', 10, 4);
-            $table->unsignedBigInteger('user_timestamp');
         });
     }
 

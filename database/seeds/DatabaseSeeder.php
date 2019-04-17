@@ -12,105 +12,72 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         app('db')->table('user')->insert([
-            'user_name'  => "geeksesi",
-            'user_email' => 'geeksesi@gmail.com',
-            'user_phone' => '09100101543',
-            'user_timestamp' => time(),
-            ]);
-            
+            'user_status'  => "idk",
+            'name'         => 'mohammad javad ghasemy laylaylay',
+            'user_name'    => 'geeksesei',
+            'phone_number' => '09100101543',
+            'password'     => password_hash('javadkhof',PASSWORD_DEFAULT),
+            'account_id'   => 1,
+            'user_credit'  => 12.5,
+        ]);
+        
         app('db')->table('user')->insert([
-            'user_name'  => "javad",
-            'user_email' => 'javad@gmail.com',
-            'user_phone' => '09224501913',
-            'user_timestamp' => time(),
+            'user_status'  => "idk",
+            'name'         => 'ali skldhflasd skkdjlfha sldfsdf',
+            'user_name'    => 'javadkhof',
+            'phone_number' => '09224501913',
+            'password'     => password_hash('geeksesi',PASSWORD_DEFAULT),
+            'account_id'   => 2,
+            'user_credit'  => 2.5,
         ]);
+            
 
-         
-        app('db')->table('product')->insert([        
-            'product_name'     => "قیر فرداعلاء",
-        ]);
 
-        app('db')->table('product_price')->insert([        
-            'product_id'      => 1,
-            'min_price'       => 155000,
-            'max_price'       => 195000,
-            'price'           => 185000,
-            'price_timestamp' => time(),
-            'price_status'    => 'available',
-        ]);
-
-        app('db')->table('sell')->insert([        
+        app('db')->table('sell_order')->insert([        
             'user_id'         => 1,
-            'product_id'      => 1,
-            'offer_value'     => 1,
-            'offer_price'     => 156000,
-            'offer_timestamp' => time(),
-            'offer_status'    => "open",
+            'order_quantity'  => 1,
+            'order_price'     => 156000,
+            'order_timestamp' => time(),
         ]);
 
-        app('db')->table('sell')->insert([        
-            'user_id'         => 1,
-            'product_id'      => 1,
-            'offer_value'     => 1,
-            'offer_price'     => 156000,
-            'offer_timestamp' => time(),
-            'transaction_id' => 1,
-            'offer_status'    => "complete",
+        app('db')->table('sell_order')->insert([        
+            'user_id'         => 2,
+            'order_quantity'  => 123,
+            'order_price'     => 56565468,
+            'order_timestamp' => time(),
         ]);
 
-        app('db')->table('transaction')->insert([
-            'product_id' => 1,
-            'seller_id' => 1,
-            'buyer_id' => 2,
-            'offer_id' => 2,
-            'offer_type' => 1,
-            'transaction_value' => 1,
-            'transaction_price' => 1,
-            'transaction_status' => "complete",
-            'transaction_timestamp' => time(),
-        ]);
-        
-        app('db')->table('transaction')->insert([
-            'product_id' => 1,
-            'seller_id' => 1,
-            'buyer_id' => 2,
-            'offer_id' => 2,
-            'offer_type' => 2,
-            'transaction_value' => 1,
-            'transaction_price' => 1,
-            'transaction_status' => "complete",
-            'transaction_timestamp' => time(),
-        ]);
-        
-        
-        app('db')->table('buy')->insert([        
+        app('db')->table('buy_order')->insert([        
             'user_id'         => 1,
-            'product_id'      => 1,
-            'offer_value'     => 1,
-            'offer_price'     => 156000,
-            'offer_timestamp' => time(),
-            'offer_status'    => "open",
+            'order_quantity'  => 1,
+            'order_price'     => 156000,
+            'order_timestamp' => time(),
         ]);
 
-        app('db')->table('buy')->insert([        
-            'user_id'         => 1,
-            'product_id'      => 1,
-            'offer_value'     => 1,
-            'offer_price'     => 156000,
-            'offer_timestamp' => time(),
-            'transaction_id' => 2,
-            'offer_status'    => "complete",
+        app('db')->table('buy_order')->insert([        
+            'user_id'         => 2,
+            'order_quantity'  => 123,
+            'order_price'     => 56565468,
+            'order_timestamp' => time(),
         ]);
-    
-    
-        app('db')->table('inventory')->insert([        
-            'user_id'         => 1,
-            'inventory_change'         => 5,
-            'inventory_change_type'         => 2,
-            'inventory_current'         => 5,
-            'inventory_timestamp' => time(),
-            'inventory_status'    => "complete",
+
+        app('db')->table('position')->insert([        
+            'user_id'                => 2,
+            'corr_id'                => 2,
+            'position_gain'          => 123,
+            'position_type'          => 123,
+            'position_quantity'      => 123,
+            'position_price'         => 56565468,
+            'position_timestamp'     => time(),
+            'position_old_timestamp' => time() - 500,
         ]);
+
+        app('db')->table('account')->insert([        
+            'owner_id' => 1,
+            'bank'     => '13546846513',
+            'sheba'    => 'IR5125457215665',
+        ]);
+
 
     }
 }

@@ -14,12 +14,12 @@ class JoinTables extends Migration
     public function up()
     {
 
-        Schema::table('buy', function (Blueprint $table) {
+        Schema::table('buy_order', function (Blueprint $table) {
             // join
             $table->foreign('user_id')->references('id')->on('user');
         });
 
-        Schema::table('sell', function (Blueprint $table) {
+        Schema::table('sell_order', function (Blueprint $table) {
             // join
             $table->foreign('user_id')->references('id')->on('user');
         });
@@ -32,7 +32,7 @@ class JoinTables extends Migration
 
         Schema::table('user', function (Blueprint $table) {
             // join
-            $table->foreign('account_id')->references('id')->on('account');
+            // $table->foreign('account_id')->references('id')->on('account');
         });
 
         Schema::table('account', function (Blueprint $table) {
