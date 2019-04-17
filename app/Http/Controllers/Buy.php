@@ -16,63 +16,6 @@ class Buy extends Controller
         return "hello Get/buy";
     }
 
-    /**
-     * [status description]
-     *
-     * @param   Request  $_req  [$_req description]
-     *
-     * @return  [type]          [return description]
-     */
-    public function status(Request $_req)
-    {
-        $response = [];
-        if (!$_req->has('status'))
-        {
-           $response["status"]  = "false";
-           $response["message"] = "please enter status";
-           return response()->json($response);
-        }
-        $data = $this->db_status($_req->input('status'));
-        
-        if ($data === false)
-        {
-            $response["status"]  = "false";
-            $response["message"] = "status is wrong";
-            return response()->json($response);
-        }
-
-        $response["status"] = "ok";
-        $response["data"]   = $data;
-
-        return response()->json($response);
-    }
- 
-    /**
-     * [db_status description]
-     *
-     * @param   [type]  $_status  [$_status description]
-     *
-     * @return  [type]            [return description]
-     */
-    public function db_status($_status)
-    {
-        /**
-
-         */
-        $status_type = ["open", "closed", "removed", "edited", "rejected", "complete"];
-        if (!in_array($_status, $status_type))
-        {
-            return false;
-        }
-        $db_result = app('db')->table('buy')
-            ->where('offer_status', $_status)
-            ->join('user',      "buy.user_id"      ,'=',   "user.id")
-            ->join('product',   "buy.product_id"   ,'=',   "product.id")
-            ->get();
-        return $db_result;
-    }
-
-
 
     /**
      * [id description]
@@ -117,10 +60,10 @@ class Buy extends Controller
         {
             return false;
         }
-        $db_result = app('db')->table('buy')
-            ->where('buy.id', $_id)
-            ->join('user',      "buy.user_id"      ,'=',   "user.id")
-            ->join('product',   "buy.product_id"   ,'=',   "product.id")
+        $db_result = app('db')->table('buy_order')
+            ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+            ->where('buy_order.id', $_id)
+            ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
             ->get();
         return $db_result;
     }
@@ -141,15 +84,19 @@ class Buy extends Controller
            $response["message"] = "please enter id";
            return response()->json($response);
         }
-        $product_id = ($_req->has('product_id')) ? $_req->input('product_id') :null;
-        $status     = ($_req->has('status'))     ? $_req->input('status')     :null;
         $start_time = ($_req->has('start_time')) ? $_req->input('start_time') :null;
         $end_time   = ($_req->has('end_time'))   ? $_req->input('end_time')   :null;
         if(isset($start_time) && $end_time === null)
         {
             $end_time = time(); // current Time
         }
-        $data = $this->db_user($_req->input('id'), $product_id, $status, $start_time, $end_time);
+        if($end_time < $start_time)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "start_time is bigger than end time O_o";
+            return response()->json($response);
+        }
+        $data = $this->db_user($_req->input('user_id'), $start_time, $end_time);
         
         if ($data === false)
         {
@@ -164,43 +111,111 @@ class Buy extends Controller
         return response()->json($response);
     }
 
-    public function db_user($_user_id, $_product_id = null, $_status = null, $_start_time = null, $_end_time = null)
+    public function db_user($_user_id, $_start_time = null, $_end_time = null)
     {
-        if (!is_numeric($_id))
+        if (!is_numeric($_user_id))
         {
             return false;
         }
-        $status_type = ["open", "closed", "removed", "edited", "rejected", "complete"];
-        if ($_status !== null && !in_array($_status, $status_type))
+        if(isset($_start_time) && isset($_end_time))
         {
-            return false;
+            $db_result = app('db')->table('buy_order')
+                ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                ->where(
+                    [
+                        ['buy_order.user_id', $_user_id],
+                        ['buy_order.order_timestamp', ">", $_start_time],
+                        ['buy_order.order_timestamp', "<", $_end_time],
+                    ])
+                ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                ->get();
         }
-        $db_result = app('db')->table('buy')
-            ->where('buy.id', $_id)
-            ->join('user',      "buy.user_id"      ,'=',   "user.id")
-            ->join('product',   "buy.product_id"   ,'=',   "product.id")
-            ->get();
+        else
+        {
+            $db_result = app('db')->table('buy_order')
+                ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                ->where('buy_order.user_id', $_user_id)
+                // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                ->get();
+        }
         return $db_result;
     }
 
    
-    public function product(Request $_req)
+   public function timestamp(Request $_req)
     {
-        return "hello Get/buy";
+        $response = [];
+        if (!$_req->has('start_time'))
+        {
+           $response["status"]  = "false";
+           $response["message"] = "please enter id";
+           return response()->json($response);
+        }
+        $user_id    = ($_req->has('user_id'))       ? $_req->input('user_id')    :null;
+        $end_time   = ($_req->has('end_time'))      ? $_req->input('end_time')   :null;
+        $start_time = ($_req->has('start_time'))    ? $_req->input('start_time') :null;
+
+        if($end_time === null)
+        {
+            $end_time = time(); // current Time
+        }
+        if($end_time < $start_time)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "start_time is bigger than end time O_o";
+            return response()->json($response);
+        }
+        $data = $this->db_timestamp($user_id, $start_time, $end_time);
+        
+        if ($data === false)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "inputs is wrong";
+            return response()->json($response);
+        }
+
+        $response["status"] = "ok";
+        $response["data"]   = $data;
+
+        return response()->json($response);
 
     }
-    
-    public function timestamp(Request $_req)
-    {
-        return "hello Get/buy";
 
-    }
-    
-    public function history(Request $_req)
-    {
-        return "hello Get/buy";
 
+    public function db_timestamp($_user_id=null, $_start_time, $_end_time)
+    {
+        if (!is_numeric($_start_time) || !is_numeric($_end_time))
+        {
+            return false;
+        }
+        if(isset($_user_id))
+        {
+            $db_result = app('db')->table('buy_order')
+                ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                ->where(
+                    [
+                        ['buy_order.user_id', $_user_id],
+                        ['buy_order.order_timestamp', ">", $_start_time],
+                        ['buy_order.order_timestamp', "<", $_end_time],
+                    ])
+                // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                ->get();
+            }
+            else
+            {
+                $db_result = app('db')->table('buy_order')
+                    ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                    ->where(
+                        [
+                            ['buy_order.order_timestamp', ">", $_start_time],
+                            ['buy_order.order_timestamp', "<", $_end_time],
+                        ])
+                    // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                    ->get();
+        }
+        return $db_result;
     }
+
 
     
     public function set(Request $_req)

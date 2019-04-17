@@ -52,8 +52,6 @@ by user_id
 ```  
     {
         user_id*
-        product_id
-        status
         start_time
         end_time
     }
@@ -68,13 +66,15 @@ by TimeStamp
 ```  
     {
         start_time*
-        end_time*
-        product_id
+        end_time
         user_id
-        status
     }
 ```
+<dl>
 
+اگر `end_time` وارد نشود برنامه زمان کنونی را در نظر می گیرد.
+
+</dl>
 
 #### start_time and end_time
   - unix_time like : ` 1554081890 `
