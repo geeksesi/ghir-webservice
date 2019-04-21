@@ -21,27 +21,30 @@ $router->get('/get/buy/user',           'Buy@user');
 $router->get('/get/buy/timestamp',      'Buy@timestamp');
 
 // Sell
-$router->get('/get/sell', 'Sell@get');
-$router->get('/get/user', 'User@get');
-$router->get('/get/user/inventory', 'User@inventory_get');
-$router->get('/get/product', 'Product@get');
-$router->get('/get/product/price', 'Product@price_get');
-$router->get('/get/transaction', 'Transaction@get');
+$router->get('/get/sell',                'Sell@get');
+$router->get('/get/sell/id',             'Sell@id');
+$router->get('/get/sell/user',           'Sell@user');
+$router->get('/get/sell/timestamp',      'Sell@timestamp');
+
+// Position 
+
+
+// User
+
+// Account
+
+
 
 // Set
 $router->post('/set/buy', 'Buy@set');
 $router->post('/set/sell', 'Sell@set');
 $router->post('/set/user', 'User@set');
-$router->post('/set/user/inventory', 'User@inventory_set');
-$router->post('/set/product', 'Product@set');
-$router->post('/set/product/price', 'Product@price_set');
-$router->post('/set/transaction', 'Transaction@set');
+$router->post('/set/position', 'Position@set');
+$router->post('/set/account', 'Account@set');
 
 // Update
 $router->post('/update/sell', 'Sell@update');
 $router->post('/update/buy', 'Buy@update');
 $router->post('/update/user', 'User@update');
-$router->post('/update/user/inventory', 'User@inventory_update');
-$router->post('/update/product', 'Product@update');
-$router->post('/update/product/price', 'Product@price_update');
-$router->post('/update/transaction', 'Transaction@update');
+$router->post('/update/position', 'Position@update');
+$router->post('/update/account', 'Account@update');
