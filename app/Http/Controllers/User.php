@@ -52,49 +52,4 @@ class User extends Controller
     }
 
 
-
-    // inventory
-
-    public function inventory_get(Request $req)
-    {
-        $response = [];
-        $status = ["status"=>"ok"];
-        if (!$req->has('status'))
-        {
-           return "please enter status";
-        }
-        $data = $this->get_sells($req->input('status'));
-        
-        if ($data === false)
-        {
-            $response["status"]= "ok";
-            return response()->json($response);
-        }
-
-        $response["status"] = "ok";
-        $response["data"] = $data;
-
-        return response()->json($response);
-
-    }
-
- 
- 
-    public function inventory_set(Request $req)
-    {
-        $en = Crypt::encrypt("hello_world");
-        var_dump($en);
-        var_dump(Crypt::decrypt($en));
-        return "hello Set/sell";
-    }
- 
- 
- 
-    public function inventory_update(Request $req)
-    {
-        return "hello Set/sell";
-    }
-
-
-
 }

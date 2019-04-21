@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Crypt;
 
 
-class Transaction extends Controller
+class Position extends Controller
 {
 
 
