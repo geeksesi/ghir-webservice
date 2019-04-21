@@ -11,7 +11,13 @@ use Illuminate\Support\Facades\Crypt;
 class Buy extends Controller
 {
 
-
+    /**
+     * [get description]
+     *
+     * @param   Request  $_req  [$_req description]
+     *
+     * @return  [type]          [return description]
+     */
     public function get(Request $_req)
     {
         $response           = [];
@@ -34,7 +40,13 @@ class Buy extends Controller
         return response()->json($response);
     }
 
-
+    /**
+     * [db_buy description]
+     *
+     * @param   [type]  $_option  [$_option description]
+     *
+     * @return  [type]            [return description]
+     */
     public function db_buy($_option = [])
     {
         if ($_option['limit'] === null && $_option['Desc'] === null)
@@ -176,6 +188,15 @@ class Buy extends Controller
         return response()->json($response);
     }
 
+    /**
+     * [db_user description]
+     *
+     * @param   [type]  $_user_id     [$_user_id description]
+     * @param   [type]  $_start_time  [$_start_time description]
+     * @param   [type]  $_end_time    [$_end_time description]
+     *
+     * @return  [type]                [return description]
+     */
     public function db_user($_user_id, $_start_time = null, $_end_time = null)
     {
         if (!is_numeric($_user_id))
@@ -206,8 +227,14 @@ class Buy extends Controller
         return $db_result;
     }
 
-   
-   public function timestamp(Request $_req)
+   /**
+    * [timestamp description]
+    *
+    * @param   Request  $_req  [$_req description]
+    *
+    * @return  [type]          [return description]
+    */
+    public function timestamp(Request $_req)
     {
         $response = [];
         if (!$_req->has('start_time'))
@@ -246,7 +273,15 @@ class Buy extends Controller
 
     }
 
-
+    /**
+     * [db_timestamp description]
+     *
+     * @param   [type]  $_user_id     [$_user_id description]
+     * @param   [type]  $_start_time  [$_start_time description]
+     * @param   [type]  $_end_time    [$_end_time description]
+     *
+     * @return  [type]                [return description]
+     */
     public function db_timestamp($_user_id=null, $_start_time, $_end_time)
     {
         if (!is_numeric($_start_time) || !is_numeric($_end_time))
@@ -282,7 +317,13 @@ class Buy extends Controller
     }
 
 
-    
+    /**
+     * [set description]
+     *
+     * @param   Request  $_req  [$_req description]
+     *
+     * @return  [type]          [return description]
+     */
     public function set(Request $_req)
     {
         if(!$_req->has('user_id') || !$_req->has('quantity') || !$_req->has('price'))
@@ -319,6 +360,15 @@ class Buy extends Controller
         return response()->json($response);
     }
     
+    /**
+     * [db_set description]
+     *
+     * @param   [type]  $_user_id   [$_user_id description]
+     * @param   [type]  $_quantity  [$_quantity description]
+     * @param   [type]  $_price     [$_price description]
+     *
+     * @return  [type]              [return description]
+     */
     public function db_set($_user_id, $_quantity, $_price)
     {
         if (!is_numeric($_user_id) || !is_numeric($_quantity) || !is_numeric($_price))
@@ -335,7 +385,13 @@ class Buy extends Controller
         return $db_result;
     }
  
- 
+    /**
+     * [update description]
+     *
+     * @param   Request  $_req  [$_req description]
+     *
+     * @return  [type]          [return description]
+     */
     public function update(Request $_req)
     {
         if(!$_req->has('id') || !$_req->has('new_quantity') || !$_req->has('new_price'))
@@ -373,6 +429,15 @@ class Buy extends Controller
 
     }
 
+    /**
+     * [db_update description]
+     *
+     * @param   [type]  $_id            [$_id description]
+     * @param   [type]  $_new_quantity  [$_new_quantity description]
+     * @param   [type]  $_new_price     [$_new_price description]
+     *
+     * @return  [type]                  [return description]
+     */
     public function db_update($_id, $_new_quantity, $_new_price)
     {
         if (!is_numeric($_id) || !is_numeric($_new_quantity) || !is_numeric($_new_price))
