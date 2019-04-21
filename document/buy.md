@@ -33,7 +33,20 @@ dt{direction:ltr; text-align:left}
 
 ---
 
-### 1 
+### 1
+by nothing :D
+- Query Address : `/get/buy/`
+
+- Quert body :
+```
+  {
+    limit
+    desc
+  }
+
+```
+
+### 2 
 by id
 - Query Address : `/get/buy/id/`
 
@@ -58,7 +71,7 @@ by user_id
 ```
 
 
-### 5 
+### 4 
 by TimeStamp
 - Query Address : `/get/buy/timestamp/`
 
@@ -105,7 +118,7 @@ by TimeStamp
 - hash :
 <dl>
 
-برای این بخش باید مقادیر بالا بجز `hash` را طی فریایند زیر رمزگذاری کنید.
+برای این بخش باید مقادیر بالا بجز `hash` را طی فرایند زیر رمزگذاری کنید.
 
 ارسال این مورد برای از بین بردن امکان اضافه کردن دیتا‌های اشتباهی از سوی کاربر الزامیست.
 
@@ -115,11 +128,11 @@ by TimeStamp
 - hash key   : 
   
   made with: \
-  ```openssl_random_pseudo_bytes(16, true);```
+  ```openssl_random_pseudo_bytes(16);```
 - hash IV: 
 
     made with: \
-    ```openssl_random_pseudo_bytes(16, true);```
+    ```openssl_random_pseudo_bytes(16);```
 
 - sample with php :
   ```
@@ -129,7 +142,7 @@ by TimeStamp
       'price'    => 1.5
     ];
     $enc_name = openssl_encrypt(
-    json_encode($array),   // padded data
+    json_encode($array),  // padded data
     'AES-256-CBC',        // cipher and mode
     $encryption_key,      // secret key
     0,                    // options (not used)

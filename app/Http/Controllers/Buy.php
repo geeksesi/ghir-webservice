@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Crypt;
@@ -11,9 +12,73 @@ class Buy extends Controller
 {
 
 
-    public function get(Request $req)
+    public function get(Request $_req)
     {
-        return "hello Get/buy";
+        $response           = [];
+        $option             = [];
+        $option['limit']    = ($_req->has('limit')) ? $_req->input('limit') : null;
+        $option['Desc']     = ($_req->has('desc'))  ? true                  : null;
+        
+        $data = $this->db_buy($option);
+        
+        if ($data === false)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "id is wrong";
+            return response()->json($response);
+        }
+
+        $response["status"] = "ok";
+        $response["data"]   = $data;
+
+        return response()->json($response);
+    }
+
+
+    public function db_buy($_option = [])
+    {
+        if ($_option['limit'] === null && $_option['Desc'] === null)
+        {
+            $db_result = app('db')->table('buy_order')
+                ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                ->get();
+            }
+        elseif($_option['limit'] !== null)
+        {
+            if($_option['Desc'] !== null)
+            {
+                $db_result = app('db')->table('buy_order')
+                    ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                    // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                    ->orderBy('id', 'desc')
+                    ->limit($_option['limit'])
+                    ->get();
+            }
+            else
+            {
+                $db_result = app('db')->table('buy_order')
+                    ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+                    // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                    ->limit($_option['limit'])
+                    ->get();
+
+            }            
+        }
+        elseif($_option['Desc'] !== null)
+        {
+            $db_result = app('db')->table('buy_order')
+            ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
+            // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+            ->orderBy('id', 'desc')
+            ->get();
+
+        }
+        else
+        {
+            return false;
+        }
+        return $db_result;
     }
 
 
@@ -63,7 +128,7 @@ class Buy extends Controller
         $db_result = app('db')->table('buy_order')
             ->select('id', 'user_id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
             ->where('buy_order.id', $_id)
-            ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+            // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
             ->get();
         return $db_result;
     }
@@ -127,7 +192,7 @@ class Buy extends Controller
                         ['buy_order.order_timestamp', ">", $_start_time],
                         ['buy_order.order_timestamp', "<", $_end_time],
                     ])
-                ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
+                // ->join('user',      "buy_order.user_id"      ,'=',   "user.id")
                 ->get();
         }
         else
@@ -220,19 +285,111 @@ class Buy extends Controller
     
     public function set(Request $_req)
     {
-        $en = Crypt::encrypt("hello_world");
-        var_dump($en);
-        var_dump(Crypt::decrypt($en));
-        return "hello Set/sell";
+        if(!$_req->has('user_id') || !$_req->has('quantity') || !$_req->has('price'))
+        {
+            $response["status"]  = "false";
+            $response["message"] = "please fill all required value";
+            return response()->json($response);
+        }
+        $user_id  = $_req->input('user_id');
+        $quantity = $_req->input('quantity');
+        $price    = $_req->input('price');
+        if($_req->has('hash'))
+        {
+            $hash          = $_req->input('hash');
+            $method        = 'AES-256-CBC';
+            $hex_key       = '65be329dece8d3c45849e350ee616d0c';
+            $hex_iv        = '7286550e4c2fa1cea3106a17f1e228ed';
+            $hash_to_json  = openssl_decrypt($hash, $method, hex2bin($hex_key), 0 , hex2bin($hex_iv));
+            $json_to_array = json_decode($hash_to_json, true);
+
+            if($json_to_array['user_id'] !== $user_id || $json_to_array['quantity'] !== $quantity || $json_to_array['price'
+            ] !== $price)
+            {
+                $response["status"]  = "false";
+                $response["message"] = "hash values has not equal to post values";
+                return response()->json($response);
+            }
+        }
+
+        $id = $this->db_set($user_id, $quantity, $price);
+
+        $response["status"]  = "ok";
+        $response["message"] = "buy_order with id: ".$id." add to db";
+        return response()->json($response);
     }
- 
+    
+    public function db_set($_user_id, $_quantity, $_price)
+    {
+        if (!is_numeric($_user_id) || !is_numeric($_quantity) || !is_numeric($_price))
+        {
+            return false;
+        }
+        $db_result = app('db')->table('buy_order')
+        ->insertGetId([
+            'user_id'        => $_user_id,
+            'order_price'    => $_price,
+            'order_quantity' => $_quantity,
+            'order_timestamp' => time()
+        ]);
+        return $db_result;
+    }
  
  
     public function update(Request $_req)
     {
-        return "hello Set/sell";
+        if(!$_req->has('id') || !$_req->has('new_quantity') || !$_req->has('new_price'))
+        {
+            $response["status"]  = "false";
+            $response["message"] = "please fill all required value";
+            return response()->json($response);
+        }
+        $id  = $_req->input('id');
+        $new_quantity = $_req->input('new_quantity');
+        $new_price    = $_req->input('new_price');
+        if($_req->has('hash'))
+        {
+            $hash          = $_req->input('hash');
+            $method        = 'AES-256-CBC';
+            $hex_key       = '65be329dece8d3c45849e350ee616d0c';
+            $hex_iv        = '7286550e4c2fa1cea3106a17f1e228ed';
+            $hash_to_json  = openssl_decrypt($hash, $method, hex2bin($hex_key), 0 , hex2bin($hex_iv));
+            $json_to_array = json_decode($hash_to_json, true);
+
+            if($json_to_array['user_id'] !== $id || $json_to_array['new_quantity'] !== $new_quantity || $json_to_array['new_price'
+            ] !== $new_price)
+            {
+                $response["status"]  = "false";
+                $response["message"] = "hash values has not equal to post values";
+                return response()->json($response);
+            }
+        }
+
+        $id = $this->db_update($id, $new_quantity, $new_price);
+
+        $response["status"]  = "ok";
+        $response["message"] = "buy_order updated with new id: ".$id;
+        return response()->json($response);
+
     }
 
+    public function db_update($_id, $_new_quantity, $_new_price)
+    {
+        if (!is_numeric($_id) || !is_numeric($_new_quantity) || !is_numeric($_new_price))
+        {
+            return false;
+        }
+        $user_id = app('db')->table('buy_order')
+            ->select('user_id')
+            ->where('id', $_id)
+            ->get();
+        
+        app('db')->table('buy_order')
+            ->where('id', $_id)
+            ->delete();
 
+        $db_result = $this->db_set($user_id->all('user_id')[0]->user_id, $_new_quantity, $_new_price);
+        return $db_result;
+    }
 
 }
