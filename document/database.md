@@ -20,7 +20,8 @@ dt{direction:ltr; text-align:left}
 |                 |                 |        user_id         | phone_number |          |
 |                 |                 |   position_timestamp   |  account_id  |          |
 |                 |                 | position_old_timestamp | user_credit  |          |
-|                 |                 |        corr_id         |              |          |
+|                 |                 |        corr_id         |              |          |  
+|                 |                 |        state           |              |          |
 
 <dl>
 
@@ -39,6 +40,7 @@ dt{direction:ltr; text-align:left}
 |                  |                  | unsigned_big_int | unsigned_int |                  |
 |                  |                  | unsigned_big_int | float(10, 4) |                  |
 |                  |                  |   unsigned_int   |              |                  |
+|                  |                  |  signed_big_int  |              |                  |
 
 
 ---

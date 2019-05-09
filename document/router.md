@@ -22,6 +22,7 @@ p,h1,h2,h4,h5,h6{direction:rtl; text-align:right}
 | `/get/position` | `/app/Http/position.php` | `position@get` |             |
 | `/get/account`  | `/app/Http/account.php`  | `account@get`  |             |
 
+
 ### Set
 - Post request with encryption
 
