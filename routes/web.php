@@ -27,11 +27,16 @@ $router->get('/get/sell/user',           'Sell@user');
 $router->get('/get/sell/timestamp',      'Sell@timestamp');
 
 // Position 
-$router->get('/get/position',  'Position@get');
+$router->get('/get/position',           'Position@get');
+$router->get('/get/position/id',        'Position@id');
+$router->get('/get/position/type',        'Position@type');
+$router->get('/get/position/user',      'Position@user');
+$router->get('/get/position/timestamp', 'Position@timestamp');
 
 
 // User
 $router->get('/get/user',  'User@get');
+$router->post('/get/user/auth',  'User@auth');
 
 // Account
 $router->get('/get/account', 'Account@get');
