@@ -22,8 +22,8 @@ class Controller extends BaseController
         
         $data = base64_decode($_data);
         $json = openssl_decrypt($data, $this->HASH_METHOD, hex2bin($this->KEY), 0, hex2bin($this->IV));
-        $data_array = json_decode($json);
-
+        $data_array = json_decode($json,true);
+        // var_dump($data_array);
         return $data_array;
     }
 
@@ -38,9 +38,37 @@ class Controller extends BaseController
     {
 
         $json = json_encode($_data);
-        $data = openssl_encrypt($data, $this->HASH_METHOD, hex2bin($this->KEY), 0, hex2bin($this->IV));
+        $data = openssl_encrypt($json, $this->HASH_METHOD, hex2bin($this->KEY), 0, hex2bin($this->IV));
         $hash = base64_encode($data);
 
         return $hash;
     }
+
+    /**
+     * will make a token for a user when login
+     *
+     * @param   [type]  $_user_id  [$_user_id description]
+     *
+     * @return  [type]             [return description]
+     */
+    public function make_token($_user_id)
+    {
+        $array = ["user_id"=>$_user_id,"time"=>time()];
+        return $this->make_hash($array);
+    }
+
+
+    /**
+     * we need user_id from token 
+     *
+     * @param   [type]  $_user_id  [$_user_id description]
+     *
+     * @return  [type]             [return description]
+     */
+    public function un_token($_token)
+    {
+        $array = $this->un_hash($_token);
+        return $array["user_id"];
+    }
+
 }
