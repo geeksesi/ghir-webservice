@@ -18,8 +18,8 @@ class Account extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->string('bank', 40);
-            $table->string('sheba', 40);
+            $table->string('bank', 40)->nullable();
+            $table->string('sheba', 40)->nullable();
             $table->unsignedInteger('owner_id');
         });
 

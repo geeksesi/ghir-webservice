@@ -18,14 +18,15 @@ class Position extends Migration
             $table->collation = 'utf8_unicode_ci';
             
             $table->increments('id');
-            $table->bigInteger('position_gain');
+            $table->bigInteger('position_gain')->nullable();
             $table->string('position_type', 40);
             $table->unsignedBigInteger('position_price');
             $table->unsignedBigInteger('position_quantity');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('corr_id');
+            $table->unsignedInteger('corr_id')->nullable();
             $table->unsignedBigInteger('position_timestamp');
             $table->unsignedBigInteger('position_old_timestamp');
+            $table->BigInteger('state');
         });
 
     }

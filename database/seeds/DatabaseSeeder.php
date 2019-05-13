@@ -63,6 +63,18 @@ class DatabaseSeeder extends Seeder
 
         app('db')->table('position')->insert([        
             'user_id'                => 2,
+            'corr_id'                => 1,
+            'position_gain'          => 123,
+            'position_type'          => 123,
+            'position_quantity'      => 123,
+            'position_price'         => 56565468,
+            'position_timestamp'     => time(),
+            'position_old_timestamp' => time() - 500,
+            'state'                  => "123",
+        ]);
+            
+        app('db')->table('position')->insert([        
+            'user_id'                => 1,
             'corr_id'                => 2,
             'position_gain'          => 123,
             'position_type'          => 123,
@@ -70,8 +82,17 @@ class DatabaseSeeder extends Seeder
             'position_price'         => 56565468,
             'position_timestamp'     => time(),
             'position_old_timestamp' => time() - 500,
+            'state'                  => "123",
         ]);
 
+        app('db')->table('offset')->insert([        
+            'position1_id' => 1,
+            'position2_id' => 2,
+            'count'        => 10,
+        ]);
+      
+      
+      
         app('db')->table('account')->insert([        
             'owner_id' => 1,
             'bank'     => '13546846513',

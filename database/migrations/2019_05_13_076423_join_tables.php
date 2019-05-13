@@ -40,6 +40,12 @@ class JoinTables extends Migration
             $table->foreign('owner_id')->references('id')->on('user');
         });
 
+        Schema::table('offset', function (Blueprint $table) {
+            // join
+            $table->foreign('position1_id')->references('id')->on('position');
+            $table->foreign('position2_id')->references('id')->on('position');
+        });
+
     }
 
     /**
