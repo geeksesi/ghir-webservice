@@ -24,7 +24,7 @@ $router->get('/', 'Home@home');
  */
 
 $router->post('/login', 'User@login');
+$router->get('/board/order', 'Order@board');
 $router->post('/{token}/order', 'Order@set');
-$router->get('/{token}/order', 'Order@get');
 $router->get('/{token}/order', 'Order@get');
 $router->get('/{token}/position', 'Position@get');
