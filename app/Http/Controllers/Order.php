@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Crypt;
 
 
-class Order extends Controller
+class Order extends PositionLib
 {
 
     /**
@@ -108,13 +108,13 @@ class Order extends Controller
             $buy_result = app('db')->table('buy_order')
             ->select('id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
             ->where('user_id', $_option['user'])
-            ->orderBy($option['sort_by'], $option['Desc'])
+            ->orderBy($_option['sort_by'], $_option['Desc'])
             ->get()
             ->all();
             $sell_result = app('db')->table('sell_order')
             ->select('id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
             ->where('user_id', $_option['user'])
-            ->orderBy($option['sort_by'], $option['Desc'])
+            ->orderBy($_option['sort_by'], $_option['Desc'])
             ->get()
             ->all();
             
@@ -124,13 +124,13 @@ class Order extends Controller
             $buy_result = app('db')->table('buy_order')
             ->select('id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
             ->where('user_id', $_option['user'])
-            ->orderBy($option['sort_by'], $option['Desc'])
+            ->orderBy($_option['sort_by'], $_option['Desc'])
             ->get()
             ->all();
             $sell_result = app('db')->table('sell_order')
             ->select('id', 'order_quantity as quantity', 'order_price as price', 'order_timestamp as timestamp')
             ->where('user_id', $_option['user'])
-            ->orderBy($option['sort_by'], $option['Desc'])
+            ->orderBy($_option['sort_by'], $_option['Desc'])
             ->limit($_option['limit'])
             ->get()
             ->all();
@@ -247,7 +247,7 @@ class Order extends Controller
      *
      * @return  [type]         [return description]
      */
-    public function db_board($sort)
+    public function db_board($_sort)
     {
         /**
          * 
@@ -256,35 +256,125 @@ class Order extends Controller
          */
         $finish_array = [];
 
-        $buy_result = app('db')->table('buy_order')
-        ->select('id', 'order_quantity as quantity', 'order_price as price')
-        ->orderBy('order_price', $sort)
-        ->get()
-        ->all();
-        $sell_result = app('db')->table('sell_order')
-        ->select('id', 'order_quantity as quantity', 'order_price as price')
-        ->orderBy('order_price', $sort)
-        ->get()
-        ->all();
+        $buy_result  = $this->all_order("buy", $sort);
+        $sell_result = $this->all_order("sell", $sort);
 
-        $finish_array["buy"]  = (array) $buy_result;
-        $finish_array["sell"] = (array) $sell_result;
+        $finish_array["buy"]  = $buy_result;
+        $finish_array["sell"] = $sell_result;
         return $finish_array;
     }
 
 
-
-    public function set(Request $_req)
+    /**
+     * [set description]
+     *
+     * @param   Request  $_req    = ["price", "quantity", "type"]
+     * @param   [type]   $_token   user token (made when login)
+     *
+     * @return  [type]            json response
+     */
+    public function set(Request $_req, $_token)
     {
-        $response           = [];
-        $option             = [];
-        $option['limit']    = ($_req->has('limit')) ? $_req->input('limit') : null;
-        $option['Desc']     = ($_req->has('desc'))  ? true                  : null;
+        $user_id  = $this->un_token($_token);
+        $response = [];
+        if($user_id === false)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "Access denied";
+            return response()->json($response);
+        }
+        if(!$_req->has("price") || !$_req->has("quantity") || !$_req->has("type"))
+        {
+            $response["status"]  = "false";
+            $response["message"] = "please fill all require value";
+            return response()->json($response);
+        }
 
-        $response["status"] = "ok";
-        $response["data"]   = "hello";
+        $can_set_order = $this->can_set_this_order($user_id, $_req->input("price"), $_req->input("quantity"), $_req->input("type"));
+        if(!$can_set_order)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "can't set this order";
+            return response()->json($response);
+        }
+
+        $can_make_position = $this->can_make_position($_req->input("type"), $_req->input("price"), $_req->input("quantity"));
+        if(!$can_make_position)
+        {
+            if(!$this->set_order($user_id, $_req->input("price"), $_req->input("type"), $_req->input("quantity")))
+            {
+                $response["status"] = "ok";
+                $response["message"]   = "something is Wrong";
+                
+                return response()->json($response);
+            }
+            
+            $response["status"] = "ok";
+            $response["message"]   = "Successfully set order";
+            
+            return response()->json($response);
+        }
+        
+        $position_data = [
+            "user_id"  => $user_id,
+            "quantity" => $_req->input("quantity"),
+            "type"     => $_req->input("type"),
+            "price"    => $_req->input("price")
+        ];
+        
+        
+        if(!$this->make_position($position_data, $can_make_position))
+        {
+            $response["status"]  = "false";
+            $response["message"] = "something is Wrong";
+        }
+        
+        $response["status"]  = "ok";
+        $response["message"] = "Successfully set order";
 
         return response()->json($response);
     }
 
+    public function set_order($_user_id, $_price, $_type, $_quantity)
+    {
+        if($_type != "sell" && $_type != "buy" || !is_numeric($_user_id) || !is_numeric($_quantity) || !is_numeric($_price))
+        {
+            return false;   
+        }
+        $table  = ($_type == "sell") ? 'sell_order'  : 'buy_order';
+        app('db')->table($table)->insert(
+            [
+                'user_id'         => $_user_id,
+                'order_price'     => $_price,
+                'order_quantity'  => $_quantity,
+                'order_timestamp' => time(),
+            ]
+        );
+
+        return true;
+    }
+
+    public function can_set_this_order($_user_id, $_quantity, $_price, $_type)
+    {
+        if($_type != "sell" && $_type != "buy" || !is_numeric($_user_id) || !is_numeric($_quantity) || !is_numeric($_price))
+        {
+            return false;
+        }
+        $by_position = $this->check_by_position($_type, $_user_id, $_quantity, $_price);
+        if($by_position === false)
+        {
+            var_dump("helo");
+            return false;
+        }
+        if($by_position["can_use"] === true || $by_position["sureplus"] == 0)
+        {
+            return true;
+        }
+        
+        $sureplus = (isset($by_position["surplus"])) ? $by_position["surplus"] : $_price * $_quantity;
+
+        $by_user_credit = $this->check_by_user_credit($_type, $_user_id, $sureplus);
+
+        return $by_user_credit;
+    }
 }

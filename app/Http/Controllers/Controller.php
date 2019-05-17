@@ -68,6 +68,11 @@ class Controller extends BaseController
     public function un_token($_token)
     {
         $array = $this->un_hash($_token);
+        // var_dump($array);
+        if(!isset($array["user_id"]))
+        {
+            return false;
+        }
         return $array["user_id"];
     }
 
