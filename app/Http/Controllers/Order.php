@@ -303,7 +303,7 @@ class Order extends PositionLib
         {
             if(!$this->set_order($user_id, $_req->input("price"), $_req->input("type"), $_req->input("quantity")))
             {
-                $response["status"] = "ok";
+                $response["status"] = "false";
                 $response["message"]   = "something is Wrong";
                 
                 return response()->json($response);
@@ -419,6 +419,7 @@ class Order extends PositionLib
         $by_position = $this->check_by_position($type, $user_id, $quantity, $price);
         if($by_position === false)
         {
+            $this->set_order($user_id, $price, $type, $quantity);
             $response["status"]  = "false";
             $response["message"] = "something happend wrong";
             return response()->json($response);
@@ -447,6 +448,14 @@ class Order extends PositionLib
         ->delete();
     }
 
+    /**
+     * [update description]
+     *
+     * @param   [type]  $_req    = ["price", "quantity", "type", "id"]
+     * @param   [type]  $_token  [$_token description]
+     *
+     * @return  [type]           [return description]
+     */
     public function update($_req, $_token)
     {
         $user_id  = $this->un_token($_token);
@@ -457,5 +466,86 @@ class Order extends PositionLib
             $response["message"] = "Access denied";
             return response()->json($response);
         }
+        if(!$_req->has("id") || !$_req->has("price") || !$_req->has("quantity") || !$_req->has("type"))
+        {
+            $response["status"]  = "false";
+            $response["message"] = "please fill all require value";
+            return response()->json($response);
+        }
+
+        $id       = $_req->input("id");
+        $type     = $_req->input("type");
+        $new_price    = $_req->input("price");
+        $new_quantity = $_req->input("quantity");
+
+        $this_order = $this->order_by_id($id, $type);
+        if($this_order[0]->user_id != $user_id)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "Access denied";
+            return response()->json($response);
+        }
+        $price    = $this_order[0]->order_price;
+        $quantity = $this_order[0]->order_quantity;
+        $this->db_delete($id, $type);
+
+        $by_position = $this->check_by_position($type, $user_id, $quantity, $price);
+        if($by_position === false)
+        {
+            $this->set_order($user_id, $price, $type, $quantity);
+            $response["status"]  = "false";
+            $response["message"] = "something happend wrong";
+            return response()->json($response);
+        }
+        if($by_position["can_use"] !== true || $by_position["sureplus"] > 0)
+        {
+            $this->increase_credit($user_id);
+        }
+        
+        $can_set_order = $this->can_set_this_order($user_id, $new_price, $new_quantity, $type);
+        if(!$can_set_order)
+        {
+            $this->set_order($user_id, $price, $type, $quantity);
+            $response["status"]  = "false";
+            $response["message"] = "can't update this order";
+            return response()->json($response);
+        }
+
+        $can_make_position = $this->can_make_position($type, $new_price, $new_quantity);
+        if(!$can_make_position)
+        {
+            if(!$this->set_order($new_price, $type, $new_quantity))
+            {
+                $response["status"] = "false";
+                $response["message"]   = "something is Wrong";
+                
+                return response()->json($response);
+            }
+            
+            $response["status"] = "ok";
+            $response["message"]   = "Successfully set order";
+            
+            return response()->json($response);
+        }
+        
+        $position_data = [
+            "user_id"  => $user_id,
+            "quantity" => $new_quantity,
+            "type"     => $type,
+            "price"    => $new_price
+        ];
+        
+        
+        if(!$this->make_position($position_data, $can_make_position))
+        {
+            $this->set_order($user_id, $price, $type, $quantity);
+            $response["status"]  = "false";
+            $response["message"] = "something is Wrong";
+        }
+        
+        $response["status"]  = "ok";
+        $response["message"] = "Successfully update order";
+
+        return response()->json($response);
     }
 }
