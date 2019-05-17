@@ -363,10 +363,9 @@ class Order extends PositionLib
         $by_position = $this->check_by_position($_type, $_user_id, $_quantity, $_price);
         if($by_position === false)
         {
-            var_dump("helo");
             return false;
         }
-        if($by_position["can_use"] === true || $by_position["sureplus"] == 0)
+        if($by_position["can_use"] === true && $by_position["sureplus"] == 0)
         {
             return true;
         }
@@ -376,5 +375,87 @@ class Order extends PositionLib
         $by_user_credit = $this->check_by_user_credit($_type, $_user_id, $sureplus);
 
         return $by_user_credit;
+    }
+
+
+    /**
+     * [delete description]
+     *
+     * @param   [type]  $_req    = ["id", "type"]
+     * @param   [type]  $_token  [$_token description]
+     *
+     * @return  [type]           [return description]
+     */
+    public function delete(Request $_req, $_token)
+    {
+        $user_id  = $this->un_token($_token);
+        $response = [];
+        if($user_id === false)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "Access denied";
+            return response()->json($response);
+        }
+        if(!$_req->has("id") || !$_req->has("type"))
+        {
+            $response["status"]  = "false";
+            $response["message"] = "please fill all require value";
+            return response()->json($response);
+        }
+        $id   = $_req->input("id");
+        $type = $_req->input("type");
+
+        $this_order = $this->order_by_id($id, $type);
+        if($this_order[0]->user_id != $user_id)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "Access denied";
+            return response()->json($response);
+        }
+        $price    = $this_order[0]->order_price;
+        $quantity = $this_order[0]->order_quantity;
+        $this->db_delete($id, $type);
+
+        $by_position = $this->check_by_position($type, $user_id, $quantity, $price);
+        if($by_position === false)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "something happend wrong";
+            return response()->json($response);
+        }
+        if($by_position["can_use"] === true && $by_position["sureplus"] == 0)
+        {
+            $response["status"]  = "ok";
+            $response["message"] = "Successfully remove order";
+            return response()->json($response);
+        }
+        
+        $this->increase_credit($user_id);
+        
+        $response["status"]  = "ok";
+        $response["message"] = "Successfully remove order and user credit increased";
+        return response()->json($response);
+
+    }
+
+    public function db_delete($_id, $_type)
+    {
+        $type  = ($_type == "sell") ? 'sell_order'  : 'buy_order';
+
+        app('db')->table($type)
+        ->where("id", $_id)
+        ->delete();
+    }
+
+    public function update($_req, $_token)
+    {
+        $user_id  = $this->un_token($_token);
+        $response = [];
+        if($user_id === false)
+        {
+            $response["status"]  = "false";
+            $response["message"] = "Access denied";
+            return response()->json($response);
+        }
     }
 }

@@ -27,4 +27,6 @@ $router->post('/login', 'User@login');
 $router->get('/board/order', 'Order@board');
 $router->post('/{token}/order', 'Order@set');
 $router->get('/{token}/order', 'Order@get');
+$router->delete('/{token}/order', 'Order@delete');
+$router->patch('/{token}/order', 'Order@update');
 $router->get('/{token}/position', 'Position@get');

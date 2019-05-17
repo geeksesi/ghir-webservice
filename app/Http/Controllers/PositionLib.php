@@ -240,6 +240,22 @@ class PositionLib extends Controller
         return $user_credit;
     }
 
+    public function increase_credit($_user_id)
+    {
+        // can't belive it's work ?
+        app('db')->table('user')
+            ->increment('user_credit', 1, ["id" => $_user_id]);
+
+        $result = app('db')->table('user')
+        ->select("user_credit")
+        ->where('user_id', $_user_id)
+        ->get()
+        ->all();
+        $res = (array)($buy_result);
+        $user_credit = $res[0]["user_credit"];
+        return $user_credit;
+    }
+
  
     public function check_by_user_credit($_type, $_user_id, $_value)
     {
@@ -264,6 +280,7 @@ class PositionLib extends Controller
         }
         else
         {
+            $this->increase_credit($_user_id);
             return false;
         }
     }
